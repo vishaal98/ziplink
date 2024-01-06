@@ -3,7 +3,7 @@ const db = require("./configs/mongoose");
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
+// app.use(express.urlencoded());
 
 app.use("/", require("./routes/index"));
 
