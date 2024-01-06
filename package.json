@@ -1,0 +1,27 @@
+{
+  "name": "ziplink",
+  "version": "1.0.0",
+  "description": "a URL shortener application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "url",
+    "shortner",
+    "linkzip",
+    "compress",
+    "link",
+    "shorter",
+    "zip",
+    "niplink"
+  ],
+  "author": "Vishaal Nair",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3",
+    "passport": "^0.7.0"
+  }
+}
