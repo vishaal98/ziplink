@@ -8,5 +8,6 @@ router.get("/", (req, res) => {
   });
 });
 router.post("/shorten", linkController.shortenURL);
+// router.get("/mylinks", )
 
 module.exports = router;

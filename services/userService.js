@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/apiError");
 const bcrypt = require("bcryptjs");
 
-const getUserById = async (id) => {
+module.exports.getUserById = async (id) => {
   return User.findOne({ _id: id });
 };
 
@@ -23,14 +23,7 @@ module.exports.createUser = async (data) => {
   return newUser;
 };
 
-module.exports.getUserAddressById = async (id) => {
-  const address = await User.findOne({ _id: id }, { address: 1, email: 1 });
-  return address;
-};
-
-module.exports.setAddress = async (user, newAddress) => {
-  user.address = newAddress;
-  await user.save();
-
-  return user.address;
+module.exports.getUserLinksById = async (id) => {
+  const user = await User.findOne({ _id: id });
+  return user.links;
 };

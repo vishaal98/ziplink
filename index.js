@@ -1,9 +1,17 @@
 const express = require("express");
 const db = require("./configs/mongoose");
+const passport = require("passport");
+const { jwtStrategy } = require("./configs/passport");
 const app = express();
 require("dotenv").config();
 app.use(express.json());
-// app.use(express.urlencoded());
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(passport.initialize());
+passport.use("jwt", jwtStrategy);
+
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/", require("./routes/index"));
 
