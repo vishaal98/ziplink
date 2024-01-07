@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const Link = require("../models/link");
 const randomString = require("randomstring");
+const User = require("../models/user");
 require("dotenv").config();
 
 module.exports.createURL = async (originalURL) => {
@@ -25,4 +26,9 @@ module.exports.findOriginal = async (code) => {
   }
 
   return link;
+};
+
+module.exports.getAllLinks = async (user) => {
+  const populatedUser = await User.findOne({ _id: user._id }).populate("links");
+  return populatedUser.links;
 };

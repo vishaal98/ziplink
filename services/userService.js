@@ -27,3 +27,9 @@ module.exports.getUserLinksById = async (id) => {
   const user = await User.findOne({ _id: id });
   return user.links;
 };
+
+module.exports.addLinks = async (linkId, userId) => {
+  const user = await User.findById({ _id: userId });
+  user.links.push(linkId);
+  user.save();
+};
