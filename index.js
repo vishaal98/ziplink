@@ -3,6 +3,7 @@ const db = require("./configs/mongoose");
 const passport = require("passport");
 const { jwtStrategy } = require("./configs/passport");
 const helmet = require("helmet");
+const cors = require("cors");
 const app = express();
 require("dotenv").config();
 app.use(express.json());
@@ -14,6 +15,9 @@ passport.use("jwt", jwtStrategy);
 app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors());
+app.options("*", cors());
 
 app.use("/", require("./routes/index"));
 

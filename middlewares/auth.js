@@ -3,6 +3,7 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/apiError");
 
 const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
+  console.log("auth check:", user);
   if (err || !user || info) {
     return reject(
       new ApiError(httpStatus.UNAUTHORIZED),
