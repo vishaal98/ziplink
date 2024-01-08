@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const linkSchema = new mongoose.Schema(
   {
-    createdAt: { type: Date, expires: "48h", default: Date.now },
+    createdAt: { type: Date, expires: 172800, default: Date.now },
     originalURL: {
       type: String,
       required: true,
