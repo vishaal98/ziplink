@@ -1,0 +1,28 @@
+/* HomePage.css */
+.homepage-container {
+  padding: 20px;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.input-container > * {
+  margin-right: 10px;
+}
+
+.links-container {
+  margin-top: 40px;
+}
+
+/* Add any additional styling as needed */

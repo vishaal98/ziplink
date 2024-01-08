@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import axios from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Box from "@mui/material/Box";
 import { Dialog } from "@mui/material";
 import { SignUp } from "./SignUp";
+import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
-function LoginForm() {
+const LoginForm = () => {
   const navigate = useNavigate();
-
-  const [openModal, setOpenModal] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
 
   const [errors, setErrors] = useState({
@@ -20,46 +24,47 @@ function LoginForm() {
     password: "",
   });
 
-  const handleFormInput = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const [openModal, setOpenModal] = useState(false);
 
-  const validateFormData = async (event) => {
-    event.preventDefault();
-    const { email, password } = formData;
-    if (!email) {
-      setErrors({
-        ...errors,
-        email: "Email cannot be empty",
-      });
-      return;
-    }
-    if (!password) {
-      setErrors({
-        ...errors,
-        password: "Password cannot be empty",
-      });
-      return;
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { email: "", password: "" };
+
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+      valid = false;
     }
 
-    await loginUser();
+    // Password strength check
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!formData.password || !passwordRegex.test(formData.password)) {
+      newErrors.password =
+        "Password must be at least 6 characters with at least one uppercase and one lowercase letter";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+
+    return valid;
   };
 
+  //login logic
   const loginUser = async () => {
     try {
       const response = await axios.post("auth/login", formData);
       console.log(response);
-
+      if (!response.data.user) {
+        setErrors({
+          email: response.data.message,
+        });
+        throw Error;
+      }
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem(
         "token",
         JSON.stringify(response.data.tokens.access.token)
       );
-
+      console.log("Login successful");
       navigate("/home");
     } catch (err) {
       console.log("Error while logging in: ", err);
@@ -70,41 +75,106 @@ function LoginForm() {
     }
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      await loginUser();
+    } else {
+      console.log("Login failed");
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value, checked } = event.target;
+    setFormData({
+      ...formData,
+      [name]: name === "rememberMe" ? checked : value,
+    });
+  };
+
   return (
     <>
-      <form onSubmit={validateFormData}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          maxWidth: "500px",
+          padding: "20px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+          backgroundColor: "#2c2435",
+        }}
+      >
         <TextField
-          // error
-          error={errors.email}
-          helperText={errors.email}
-          placeholder="Enter email"
-          label="Enter Email"
+          fullWidth
+          label="Email"
           name="email"
           value={formData.email}
-          onChange={handleFormInput}
+          onChange={handleChange}
+          error={Boolean(errors.email)}
+          helperText={errors.email}
+          margin="normal"
+          sx={{
+            backgroundColor: "#322a3a",
+          }}
+          InputLabelProps={{
+            sx: { color: "#ffffff" },
+          }}
+          InputProps={{
+            sx: { color: "#ffffff" },
+          }}
         />
         <TextField
+          fullWidth
           type="password"
-          error={errors.password}
-          helperText={errors.password}
-          placeholder="Enter password"
-          label="Enter Password"
+          label="Password"
           name="password"
           value={formData.password}
-          onChange={handleFormInput}
+          onChange={handleChange}
+          error={Boolean(errors.password)}
+          helperText={errors.password}
+          margin="normal"
+          sx={{ mt: 2, backgroundColor: "#322a3a" }}
+          InputLabelProps={{
+            sx: { color: "#ffffff" },
+          }}
+          InputProps={{
+            sx: { color: "#ffffff" },
+          }}
         />
-        <button type="submit">Login</button>
-        <div>
-          New to ZipLink??
-          <span
-            onClick={() => {
-              setOpenModal(true);
-            }}
-          >
-            click here to register..
-          </span>
-        </div>
-      </form>
+        {/* <FormControlLabel
+          control={
+            <Checkbox
+              checked={formData.rememberMe}
+              onChange={handleChange}
+              name="rememberMe"
+              color="primary"
+            />
+          }
+          label="Remember Me"
+          sx={{ mt: 1, textAlign: "left", color: "#939096" }}
+        /> */}
+        <Button
+          type="submit"
+          variant="contained"
+          // color="#8f81f5"
+          fullWidth
+          sx={{ mt: 2, backgroundColor: "#8f81f5" }}
+        >
+          Login
+        </Button>
+        <Box sx={{ mt: 2, textAlign: "center" }}>
+          {/* <Link href="#" variant="body2">
+          Forgot Password?
+        </Link> */}
+          <Box mt={1} sx={{ color: "#939096" }}>
+            Don't have an account?
+            <Link href="#" variant="body2">
+              <span onClick={() => setOpenModal(true)}>Sign Up</span>
+            </Link>
+          </Box>
+        </Box>
+      </Box>
       <Dialog
         open={openModal}
         onClose={() => {
@@ -115,6 +185,6 @@ function LoginForm() {
       </Dialog>
     </>
   );
-}
+};
 
 export default LoginForm;
