@@ -54,6 +54,17 @@ export const SignUp = () => {
       return;
     }
 
+    // Password strength check
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!password || !passwordRegex.test(password)) {
+      setErrors({
+        ...errors,
+        password:
+          "Password must be at least 6 characters with at least one uppercase and one lowercase letter",
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       setErrors({
         // ...errors,
@@ -215,7 +226,7 @@ export const SignUp = () => {
           value={formData.confirmPassword}
           onChange={handleChange}
           error={Boolean(errors.password)}
-          helperText={errors.password}
+          // helperText={errors.password}
           margin="normal"
           sx={{
             backgroundColor: "#322a3a",

@@ -16,6 +16,7 @@ import {
   TableBody,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ export const HomePage = () => {
   const [shortenedURL, setShortURL] = useState("");
   const [url, setURL] = useState("");
   const [links, setLinks] = useState(user.links);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormInput = (event) => {
     setURL(event.target.value);
@@ -42,10 +44,12 @@ export const HomePage = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       const response = await axios.post("links/shorten", { url });
       setShortURL(response.data.shortLink);
       await getAllLinks();
+      setIsLoading(false);
     } catch (err) {
       console.log("Error while shortening the URL: ", err);
     }
@@ -143,7 +147,7 @@ export const HomePage = () => {
                 backgroundColor: "#8f81f5",
               }}
             >
-              Shorten
+              {isLoading ? <CircularProgress size={25} /> : "Shorten"}
             </Button>
           </form>
 

@@ -35,14 +35,10 @@ const LoginForm = () => {
       valid = false;
     }
 
-    // Password strength check
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-    if (!formData.password || !passwordRegex.test(formData.password)) {
-      newErrors.password =
-        "Password must be at least 6 characters with at least one uppercase and one lowercase letter";
+    if (!formData.password) {
+      newErrors.password = "Password is Empty";
       valid = false;
     }
-
     setErrors(newErrors);
 
     return valid;
