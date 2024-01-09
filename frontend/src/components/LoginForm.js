@@ -5,7 +5,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
-import { Dialog } from "@mui/material";
+import { CircularProgress, Dialog } from "@mui/material";
 import { SignUp } from "./SignUp";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +25,8 @@ const LoginForm = () => {
   });
 
   const [openModal, setOpenModal] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     let valid = true;
@@ -46,6 +48,7 @@ const LoginForm = () => {
 
   //login logic
   const loginUser = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post("auth/login", formData);
       console.log(response);
@@ -53,6 +56,7 @@ const LoginForm = () => {
         setErrors({
           email: response.data.message,
         });
+        setIsLoading(false);
         throw Error;
       }
       localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -61,6 +65,7 @@ const LoginForm = () => {
         JSON.stringify(response.data.tokens.access.token)
       );
       console.log("Login successful");
+      setIsLoading(false);
       navigate("/home");
     } catch (err) {
       console.log("Error while logging in: ", err);
@@ -157,7 +162,7 @@ const LoginForm = () => {
           fullWidth
           sx={{ mt: 2, backgroundColor: "#8f81f5" }}
         >
-          Login
+          {isLoading ? <CircularProgress /> : "Login"}
         </Button>
         <Box sx={{ mt: 2, textAlign: "center" }}>
           {/* <Link href="#" variant="body2">

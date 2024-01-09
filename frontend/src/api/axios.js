@@ -12,7 +12,7 @@ function authRequestInterceptor(config) {
 
 const axios = Axios.create({
   // baseURL: "http://127.0.0.1:5000/",
-  baseURL: "https://ziplink-j29f.onrender.com",
+  baseURL: "https://ziplink-ctt0.onrender.com",
 });
 
 axios.interceptors.request.use(authRequestInterceptor);
